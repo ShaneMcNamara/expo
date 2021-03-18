@@ -4,6 +4,8 @@
 
 ### 🛠 Breaking changes
 
++- Jonathan/e 499 remove use legacy manifest constant ios. ([#12249](https://github.com/expo/expo/pull/12249) by [@jkhales](https://github.com/jkhales))
+
 ### 🎉 New features
 
 ### 🐛 Bug fixes
