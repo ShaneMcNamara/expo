@@ -48,7 +48,6 @@ static NSString * const EXUpdatesConfigNeverString = @"NEVER";
     _releaseChannel = EXUpdatesDefaultReleaseChannelName;
     _launchWaitMs = @(0);
     _checkOnLaunch = EXUpdatesCheckAutomaticallyConfigAlways;
-    _usesLegacyManifest = YES;
     _hasEmbeddedUpdate = YES;
   }
   return self;
@@ -59,11 +58,6 @@ static NSString * const EXUpdatesConfigNeverString = @"NEVER";
   EXUpdatesConfig *updatesConfig = [[EXUpdatesConfig alloc] init];
   [updatesConfig loadConfigFromDictionary:config];
   return updatesConfig;
-}
-
--(void)setUsesLegacyManifest:(BOOL)usesLegacyManifest
-{
-  _usesLegacyManifest = usesLegacyManifest;
 }
 
 - (void)loadConfigFromDictionary:(NSDictionary *)config

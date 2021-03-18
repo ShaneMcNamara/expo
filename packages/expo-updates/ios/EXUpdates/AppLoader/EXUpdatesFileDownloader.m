@@ -105,9 +105,6 @@ NSTimeInterval const EXUpdatesDefaultTimeoutInterval = 60;
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSDictionary *headerDictionary = [httpResponse allHeaderFields];
     id headerSignature = headerDictionary[@"expo-manifest-signature"];
-    id expoProtocolVersion = headerDictionary[@"expo-protocol-version"];
-    BOOL usesLegacyManifest = expoProtocolVersion == nil;
-    [self.config setUsesLegacyManifest:&usesLegacyManifest];
     
     NSError *err;
     id parsedJson = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
@@ -206,10 +203,17 @@ NSTimeInterval const EXUpdatesDefaultTimeoutInterval = 60;
     // There are a few cases in Expo Go where we still want to use the unsigned manifest anyway, so don't mark it as unverified.
     mutableManifest[@"isVerified"] = @(isVerified);
   }
+
+  NSError *error;
   EXUpdatesUpdate *update = [EXUpdatesUpdate updateWithManifest:mutableManifest.copy
                                                        response:response
                                                          config:_config
-                                                       database:database];
+                                                       database:database
+                                                          error:&error];
+  if (error){
+    errorBlock(error, response);
+  }
+
   if (![EXUpdatesSelectionPolicyFilterAware doesUpdate:update matchFilters:update.manifestFilters]) {
     NSError *error = [NSError errorWithDomain:EXUpdatesFileDownloaderErrorDomain
                                          code:1021
