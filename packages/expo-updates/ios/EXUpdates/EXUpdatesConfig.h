@@ -30,7 +30,6 @@ typedef NS_ENUM(NSInteger, EXUpdatesCheckAutomaticallyConfig) {
 
 + (instancetype)configWithDictionary:(NSDictionary *)config;
 - (void)loadConfigFromDictionary:(NSDictionary *)config;
- 
 + (NSString *)normalizedURLOrigin:(NSURL *)url;
 
 @end

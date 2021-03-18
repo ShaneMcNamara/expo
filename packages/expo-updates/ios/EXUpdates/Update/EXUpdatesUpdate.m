@@ -58,26 +58,26 @@ NS_ASSUME_NONNULL_BEGIN
                           response:(nullable NSURLResponse *)response
                             config:(EXUpdatesConfig *)config
                           database:(EXUpdatesDatabase *)database
-                             error:(NSError *)error
+                             error:(NSError **)error
 {
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
   NSDictionary *headerDictionary = [httpResponse allHeaderFields];
-  id expoProtocolVersion = headerDictionary[@"expo-protocol-version"];
-  
+  NSNumber *expoProtocolVersion = headerDictionary[@"expo-protocol-version"];
+
   if (expoProtocolVersion == nil) {
     return [EXUpdatesLegacyUpdate updateWithLegacyManifest:manifest
                                                     config:config
                                                   database:database];
-  } else if (expoProtocolVersion.intValue == 1) {
+  } else if (expoProtocolVersion.integerValue == 0) {
     return [EXUpdatesNewUpdate updateWithNewManifest:manifest
                                             response:response
                                               config:config
                                             database:database];
   } else {
-    error = [NSError errorWithDomain:EXUpdatesUpdate
+    *error = [NSError errorWithDomain:@"EXUpdatesUpdate"
                                 code:1000
-                            userInfo:@{NSLocalizedDescriptionKey: @"expo-protoco-version '%@' is invalid", expoProtocolVersion}];
-    return;
+                            userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"expo-protoco-version '%@' is invalid", expoProtocolVersion]}];
+    return nil;
   }
 }
 
